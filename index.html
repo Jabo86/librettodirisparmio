@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Libretto di Risparmio · Piano Famiglia</title>
+<title>Libretto di Risparmio · Multi-Utente</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,8 +52,117 @@
   }
 
   .app{max-width:1320px;margin:0 auto;padding:22px 20px 60px;}
+  
+  /* ===== LOCK SCREEN ===== */
+  #lockScreen {
+    position:fixed; inset:0; z-index:99999;
+    background:
+      radial-gradient(1200px 600px at 50% 30%, #16324a 0%, var(--bg-0) 100%);
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column;
+    backdrop-filter:blur(12px);
+    padding:20px;
+  }
+  #lockScreen.hidden{display:none;}
+  .lock-box{
+    background:var(--panel-2);
+    border:1px solid var(--brass-dim);
+    border-radius:20px;
+    padding:40px 36px;
+    max-width:420px;
+    width:100%;
+    box-shadow:var(--shadow);
+  }
+  .lock-box h2{
+    font-family:'Fraunces',serif;
+    font-size:24px;
+    margin:0 0 6px;
+    color:var(--brass-bright);
+  }
+  .lock-box .sub{
+    font-size:13px;
+    color:var(--text-dim);
+    margin-bottom:24px;
+  }
+  .pin-dots{
+    display:flex; gap:14px; justify-content:center; margin:20px 0;
+  }
+  .pin-dot{
+    width:18px; height:18px; border-radius:50%;
+    border:2px solid var(--rule);
+    background:var(--bg-0);
+    transition:all .2s;
+  }
+  .pin-dot.filled{
+    background:var(--brass);
+    border-color:var(--brass-bright);
+    box-shadow:0 0 12px rgba(216,173,87,0.3);
+  }
+  .pin-pad{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+    max-width:280px; margin:16px auto 0;
+  }
+  .pin-key{
+    padding:16px; border-radius:12px;
+    background:var(--panel);
+    border:1px solid var(--rule-soft);
+    color:var(--paper);
+    font-size:22px; font-weight:600;
+    cursor:pointer;
+    transition:all .15s;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .pin-key:hover{background:var(--rule-soft); transform:scale(1.03);}
+  .pin-key:active{transform:scale(0.95);}
+  .pin-key.empty{background:transparent; border-color:transparent; cursor:default;}
+  .pin-key.del{color:var(--rose); font-size:16px;}
+  .lock-error{
+    color:var(--rose); font-size:13px; min-height:20px; margin-top:12px;
+  }
+  .user-selector{
+    display:flex; gap:10px; justify-content:center; margin-bottom:20px; flex-wrap:wrap;
+  }
+  .user-btn{
+    padding:10px 22px; border-radius:10px;
+    border:2px solid var(--rule);
+    background:var(--panel);
+    color:var(--text-dim);
+    font-weight:600; font-size:14px;
+    cursor:pointer;
+    transition:all .2s;
+    min-width:80px;
+  }
+  .user-btn:hover{border-color:var(--brass-dim); color:var(--paper);}
+  .user-btn.active{
+    border-color:var(--brass);
+    background:rgba(216,173,87,0.12);
+    color:var(--brass-bright);
+  }
+  .user-btn .badge{
+    display:block; font-size:10px; color:var(--text-faint); font-weight:400; margin-top:2px;
+  }
 
-  /* ===== cover / header ===== */
+  /* ===== USER BADGE ===== */
+  .user-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 16px 6px 12px;
+    border-radius:20px;
+    background:rgba(216,173,87,0.1);
+    border:1px solid var(--brass-dim);
+    font-size:13px; font-weight:600;
+    color:var(--brass-bright);
+    cursor:pointer;
+    transition:all .15s;
+  }
+  .user-badge:hover{background:rgba(216,173,87,0.18);}
+  .user-badge .avatar{
+    width:28px; height:28px; border-radius:50%;
+    background:var(--brass);
+    color:var(--bg-0);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:14px;
+  }
+
   .cover{
     position:relative;
     background:linear-gradient(160deg,#122436,#0d1b28);
@@ -76,7 +185,9 @@
     background:linear-gradient(90deg,transparent,var(--brass) 15%,var(--brass) 85%,transparent);
     opacity:0.7;
   }
-  .cover-inner{position:relative; display:flex; justify-content:center; align-items:center; gap:20px; flex-wrap:wrap; text-align:center; flex-direction:column;}
+  .cover-inner{position:relative; display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;}
+  .cover-left{text-align:left; flex:1;}
+  .cover-right{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
   .cover-eyebrow{
     font-family:'JetBrains Mono',monospace;
     font-size:11px;
@@ -97,7 +208,6 @@
   .cover p.sub{color:var(--text-dim); font-size:14.5px; margin:0;}
   .cover p.sub strong{color:var(--paper); font-weight:600;}
 
-  .cover-right{display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;}
   .seal-mini{
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     width:64px;height:64px;border-radius:50%;
@@ -133,8 +243,12 @@
   }
   .btn-danger:hover{background:rgba(224,128,138,0.1); border-color:var(--rose);}
   .btn-sm{padding:8px 16px;font-size:12.5px;border-radius:8px;}
+  .btn-success{
+    background:rgba(99,181,146,0.15); color:var(--forest);
+    border:1.5px solid rgba(99,181,146,0.3);
+  }
+  .btn-success:hover{background:rgba(99,181,146,0.25); border-color:var(--forest);}
 
-  /* ===== tabs (ledger dividers) ===== */
   .tabs{display:flex; justify-content:center; gap:6px; margin-bottom:20px; overflow-x:auto; padding-top:8px;}
   .tab{
     position:relative;
@@ -175,7 +289,6 @@
   .tab-content.active{display:block;}
   @keyframes reveal{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
 
-  /* ===== cards ===== */
   .card{
     background:var(--panel);
     border:1px solid var(--rule-soft);
@@ -215,7 +328,6 @@
     .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
   }
 
-  /* ===== metric plates ===== */
   .plate{
     background:var(--panel);
     border:1px solid var(--rule-soft);
@@ -242,7 +354,6 @@
   .p-foot .chg.down{color:var(--rose);}
   .p-foot .chg.neutral{color:var(--text-faint);}
 
-  /* ===== seal ring (signature element) ===== */
   .seal-wrap{display:flex; align-items:center; justify-content:center;}
   .seal-ring{position:relative; width:196px; height:196px;}
   .seal-ring svg{transform:rotate(-90deg);}
@@ -256,7 +367,6 @@
   .seal-center .amt{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text-dim); margin-top:4px;}
   .seal-center .lbl{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--text-faint); text-transform:uppercase; margin-top:2px;}
 
-  /* ===== milestone ruler ===== */
   .ruler{position:relative; padding:18px 6px 4px;}
   .ruler-line{position:absolute; left:20px; right:20px; top:38px; height:2px; background:var(--rule);}
   .ruler-fill{position:absolute; left:20px; top:38px; height:2px; background:linear-gradient(90deg,var(--brass-dim),var(--brass-bright)); transition:width .8s ease;}
@@ -272,11 +382,9 @@
   .r-mark .r-status{font-size:10.5px; margin-top:8px; text-align:center; color:var(--text-faint); font-weight:600;}
   .r-mark.reached .r-status{color:var(--forest);}
 
-  /* ===== charts ===== */
   .chart-box{position:relative; height:250px;}
   .chart-box-sm{height:210px;}
 
-  /* ===== form ===== */
   .form-row{display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end; justify-content:center;}
   .form-group{display:flex; flex-direction:column; gap:6px; flex:1; min-width:140px;}
   .form-group label{font-size:12px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px;}
@@ -290,7 +398,6 @@
   }
   .form-group input::placeholder{color:var(--text-faint);}
 
-  /* ===== passbook rows / table ===== */
   .table-wrap{overflow-x:auto; max-height:400px; overflow-y:auto; border-radius:10px;}
   .table-wrap::-webkit-scrollbar{width:6px;}
   .table-wrap::-webkit-scrollbar-track{background:transparent;}
@@ -322,7 +429,6 @@
 
   .empty-msg{text-align:center; color:var(--text-faint); padding:36px 0; font-size:14px;}
 
-  /* ===== toggle ===== */
   .toggle-row{display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap; background:var(--bg-1); padding:16px 20px; border-radius:12px; margin-top:8px; border:1px solid var(--rule-soft);}
   .toggle{position:relative; width:46px; height:26px; background:var(--rule); border-radius:20px; cursor:pointer; flex-shrink:0; transition:background .25s;}
   .toggle.active{background:var(--brass);}
@@ -340,7 +446,6 @@
 
   .footer{text-align:center; font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-faint); margin-top:30px; padding-top:18px; border-top:1px solid var(--rule-soft); letter-spacing:0.5px;}
 
-  /* ===== toast ===== */
   #toastHost{position:fixed; top:18px; right:18px; left:18px; z-index:9999; display:flex; flex-direction:column; align-items:flex-end; gap:10px; max-width:min(320px, calc(100vw - 36px)); margin-left:auto;}
   .toast{
     background:var(--panel-2); border:1px solid var(--brass-dim); border-left:4px solid var(--brass);
@@ -350,19 +455,29 @@
   .toast.err{border-color:var(--rose); border-left-color:var(--rose);}
   @keyframes toastIn{from{opacity:0; transform:translateX(20px);} to{opacity:1; transform:translateX(0);}}
 
-  /* ===== modal ===== */
   #modalHost{position:fixed; inset:0; background:rgba(6,12,18,0.7); backdrop-filter:blur(3px); display:none; align-items:center; justify-content:center; z-index:9998; padding:20px;}
   #modalHost.show{display:flex;}
-  .modal-card{background:var(--panel-2); border:1px solid var(--brass-dim); border-radius:14px; padding:26px 28px; max-width:380px; width:100%; box-shadow:var(--shadow);}
+  .modal-card{background:var(--panel-2); border:1px solid var(--brass-dim); border-radius:14px; padding:26px 28px; max-width:420px; width:100%; box-shadow:var(--shadow);}
   .modal-card h3{font-family:'Fraunces',serif; margin:0 0 10px; color:var(--paper); font-size:19px;}
-  .modal-card p{color:var(--text-dim); font-size:14px; line-height:1.6; margin:0 0 20px;}
+  .modal-card p{color:var(--text-dim); font-size:14px; line-height:1.6; margin:0 0 16px;}
+  .modal-card input{width:100%;padding:10px 14px;border-radius:8px;background:var(--bg-1);border:1.5px solid var(--rule);color:var(--paper);font-size:14px;margin-bottom:16px;font-family:'Inter',sans-serif;}
+  .modal-card input:focus{outline:none;border-color:var(--brass);}
   .modal-actions{display:flex; justify-content:flex-end; gap:10px;}
+
+  .user-name-input{
+    background:var(--bg-1); border:1.5px solid var(--rule);
+    color:var(--paper); padding:8px 14px; border-radius:8px;
+    font-size:14px; width:100%; max-width:200px;
+    font-family:'Inter',sans-serif;
+  }
+  .user-name-input:focus{outline:none; border-color:var(--brass);}
 
   ::selection{background:rgba(216,173,87,0.3);}
 
   @media (max-width:768px){
     .cover{padding:22px 20px;}
-    .cover-inner{align-items:center;}
+    .cover-inner{flex-direction:column; align-items:center;}
+    .cover-left{text-align:center;}
     .plate .p-value{font-size:22px;}
     .card{padding:18px 16px;}
     .tabs{justify-content:flex-start; padding-left:2px; padding-right:2px;}
@@ -371,30 +486,74 @@
     .grid-seal{gap:20px;}
     .seal-ring{width:160px; height:160px;}
     .seal-ring svg{width:160px; height:160px;}
+    .lock-box{padding:30px 20px;}
+    .user-selector{flex-direction:column; align-items:center;}
   }
   @media (max-width:400px){
     .tab{padding:9px 11px 11px; font-size:11.5px;}
     .r-mark{width:60px;}
+    .pin-pad{gap:8px;}
+    .pin-key{padding:14px; font-size:18px;}
   }
 </style>
 </head>
 <body>
 
+<!-- TOAST HOST (mancava: i toast non apparivano mai) -->
 <div id="toastHost"></div>
-<div id="modalHost"><div class="modal-card" id="modalCard"></div></div>
 
-<div class="app">
+<!-- LOCK SCREEN -->
+<div id="lockScreen">
+  <div class="lock-box">
+    <h2>🔒 Libretto</h2>
+    <div class="sub">Seleziona utente e inserisci il PIN</div>
+    
+    <div class="user-selector" id="userSelector">
+      <!-- Utenti generati dinamicamente -->
+    </div>
+    
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+    </div>
+    
+    <div class="lock-error" id="lockError"></div>
+    
+    <div class="pin-pad" id="pinPad">
+      <button class="pin-key" data-value="1">1</button>
+      <button class="pin-key" data-value="2">2</button>
+      <button class="pin-key" data-value="3">3</button>
+      <button class="pin-key" data-value="4">4</button>
+      <button class="pin-key" data-value="5">5</button>
+      <button class="pin-key" data-value="6">6</button>
+      <button class="pin-key" data-value="7">7</button>
+      <button class="pin-key" data-value="8">8</button>
+      <button class="pin-key" data-value="9">9</button>
+      <button class="pin-key empty"></button>
+      <button class="pin-key" data-value="0">0</button>
+      <button class="pin-key del" data-value="del">⌫</button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="display:none;">
 
   <header class="cover">
     <div class="cover-inner">
-      <div>
-        <div class="cover-eyebrow"><span class="line"></span>Libretto di risparmio · piano famiglia <span class="line"></div>
-        <h1>Fabio <span id="">  </span> Astorino</h1>
+      <div class="cover-left">
+        <div class="cover-eyebrow"><span class="line"></span>Libretto di risparmio · piano famiglia <span class="line"></span></div>
+        <h1 id="titoloPrincipale">Fabio Astorino</h1>
         <p class="sub">Registro aperto il <strong id="dataInizioLabel">1 agosto 2026</strong></p>
       </div>
       <div class="cover-right">
+        <div class="user-badge" id="userBadge" title="Cambia utente">
+          <div class="avatar" id="userAvatar">F</div>
+          <span id="userNameDisplay">Fabio</span>
+        </div>
         <div class="seal-mini"><span class="n" id="conteggioMovimenti">0</span><span class="l">voci</span></div>
-        <span id="storageBadge" style="display:none; font-size:11.5px; padding:6px 12px; border-radius:20px; background:rgba(224,128,138,0.12); border:1px solid rgba(224,128,138,0.4); color:var(--rose); font-family:'JetBrains Mono',monospace;">⚠ salvataggio non disponibile — scarica un backup</span>
         <button class="btn btn-stamp" id="aggiungiBtnHeader">＋ Nuova voce</button>
       </div>
     </div>
@@ -405,6 +564,7 @@
     <button class="tab" data-tab="movimenti"><span class="num">II</span>Movimenti</button>
     <button class="tab" data-tab="analisi"><span class="num">III</span>Analisi</button>
     <button class="tab" data-tab="impostazioni"><span class="num">IV</span>Impostazioni</button>
+    <button class="tab" data-tab="utenti"><span class="num">V</span>👥 Utenti</button>
   </nav>
 
   <div class="panel">
@@ -584,9 +744,37 @@
       </div>
     </div>
 
+    <!-- TAB UTENTI -->
+    <div class="tab-content" id="tab-utenti">
+      <div class="card">
+        <div class="card-title">👥 Gestione utenti</div>
+        <p class="foot-note">Ogni utente ha il proprio libretto separato. Per cambiare utente, clicca sul badge in alto a destra.</p>
+        
+        <div style="display:flex; flex-direction:column; gap:12px; max-width:500px; margin:0 auto;">
+          <div id="userList" style="text-align:left;">
+            <!-- Lista utenti generata dinamicamente -->
+          </div>
+          
+          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px; border-top:1px solid var(--rule-soft); padding-top:16px;">
+            <input type="text" id="nuovoUtenteInput" placeholder="Nome nuovo utente" class="user-name-input" style="max-width:200px;">
+            <button class="btn btn-success btn-sm" id="aggiungiUtenteBtn">＋ Aggiungi utente</button>
+          </div>
+          
+          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+            <button class="btn btn-outline btn-sm" id="cambiaPinBtn">🔑 Cambia PIN</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <footer class="footer">LIBRETTO DI RISPARMIO · SALVATAGGIO AUTOMATICO · v4.0</footer>
+  <footer class="footer">LIBRETTO DI RISPARMIO · MULTI-UTENTE · v5.0</footer>
+</div>
+
+<!-- MODAL HOST (corretto: aggiunto id="modalCard") -->
+<div id="modalHost">
+  <div class="modal-card" id="modalCard"></div>
 </div>
 
 <script>
@@ -596,12 +784,17 @@
 // ============================================================
 // STATO
 // ============================================================
-let movimenti = [];
-let rendimentoAttivo = false;
-let tasso = 2.5;
-let obiettivo = 25000;
-let dataInizio = '2026-08-01';
-const STORAGE_KEY = 'piano-finanziario-v1';
+let stato = {
+  utenti: {},
+  utenteCorrente: null,
+  rendimentoAttivo: false,
+  tasso: 2.5,
+  obiettivo: 25000,
+  dataInizio: '2026-08-01'
+};
+let pinCorrente = '';
+let tentativiFalliti = 0;
+const STORAGE_KEY = 'libretto-multiutente-v1';
 
 // ============================================================
 // UTILITY
@@ -627,13 +820,19 @@ function formatDateLong(dateStr){
   return d.getDate() + ' ' + mesi[d.getMonth()] + ' ' + d.getFullYear();
 }
 function oggiStr(){ return new Date().toISOString().split('T')[0]; }
-function monthKey(dateStr){ return dateStr.slice(0,7); } // YYYY-MM
+function monthKey(dateStr){ return dateStr.slice(0,7); }
+
+function getInitials(nome){
+  if (!nome) return '?';
+  return nome.charAt(0).toUpperCase();
+}
 
 // ============================================================
-// TOAST / MODAL (sostituiscono alert/confirm nativi)
+// TOAST / MODAL
 // ============================================================
 const toastHost = document.getElementById('toastHost');
 function toast(msg, type){
+  if (!toastHost) return;
   const el = document.createElement('div');
   el.className = 'toast' + (type === 'err' ? ' err' : '');
   el.textContent = msg;
@@ -643,7 +842,9 @@ function toast(msg, type){
 
 const modalHost = document.getElementById('modalHost');
 const modalCard = document.getElementById('modalCard');
+
 function confirmDialog(title, message){
+  if (!modalCard || !modalHost) return Promise.resolve(false);
   return new Promise((resolve) => {
     modalCard.innerHTML = `<h3>${escapeHtml(title)}</h3><p>${escapeHtml(message)}</p>
       <div class="modal-actions">
@@ -657,50 +858,261 @@ function confirmDialog(title, message){
   });
 }
 
+function promptDialog(title, message, defaultValue = ''){
+  if (!modalCard || !modalHost) return Promise.resolve(null);
+  return new Promise((resolve) => {
+    modalCard.innerHTML = `<h3>${escapeHtml(title)}</h3><p>${escapeHtml(message)}</p>
+      <input type="text" id="mInput" value="${escapeHtml(defaultValue)}">
+      <div class="modal-actions">
+        <button class="btn btn-outline btn-sm" id="mCancel">Annulla</button>
+        <button class="btn btn-stamp btn-sm" id="mOk">Conferma</button>
+      </div>`;
+    modalHost.classList.add('show');
+    const input = modalCard.querySelector('#mInput');
+    setTimeout(() => input.focus(), 100);
+    const close = (val) => { modalHost.classList.remove('show'); resolve(val); };
+    modalCard.querySelector('#mCancel').onclick = () => close(null);
+    modalCard.querySelector('#mOk').onclick = () => close(input.value);
+    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') close(input.value); });
+  });
+}
+
+function promptPinDialog(title, message){
+  if (!modalCard || !modalHost) return Promise.resolve(null);
+  return new Promise((resolve) => {
+    modalCard.innerHTML = `<h3>${escapeHtml(title)}</h3><p>${escapeHtml(message)}</p>
+      <input type="password" id="mInput" placeholder="Inserisci PIN (4 cifre)" maxlength="4" style="text-align:center;font-size:24px;letter-spacing:10px;">
+      <div class="modal-actions">
+        <button class="btn btn-outline btn-sm" id="mCancel">Annulla</button>
+        <button class="btn btn-stamp btn-sm" id="mOk">Conferma</button>
+      </div>`;
+    modalHost.classList.add('show');
+    const input = modalCard.querySelector('#mInput');
+    setTimeout(() => input.focus(), 100);
+    const close = (val) => { modalHost.classList.remove('show'); resolve(val); };
+    modalCard.querySelector('#mCancel').onclick = () => close(null);
+    modalCard.querySelector('#mOk').onclick = () => close(input.value);
+    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') close(input.value); });
+  });
+}
+
 // ============================================================
-// STORAGE (persistente, per-utente)
+// STORAGE
 // ============================================================
-let storageOk = true;
-let storageWarned = false;
-async function salvaStorage(){
+function salvaStorage(){
   try{
-    const data = { movimenti, rendimentoAttivo, tasso, obiettivo, dataInizio };
-    await window.storage.set(STORAGE_KEY, JSON.stringify(data), false);
-    if (!storageOk){ storageOk = true; const b = $('storageBadge'); if (b) b.style.display = 'none'; }
+    const data = {
+      utenti: stato.utenti,
+      rendimentoAttivo: stato.rendimentoAttivo,
+      tasso: stato.tasso,
+      obiettivo: stato.obiettivo,
+      dataInizio: stato.dataInizio
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }catch(e){
     console.warn('Errore salvataggio:', e);
-    storageOk = false;
-    const b = $('storageBadge'); if (b) b.style.display = 'inline-block';
-    if (!storageWarned){
-      storageWarned = true;
-      toast('Il salvataggio automatico non è disponibile in questo momento: scarica un backup dalle Impostazioni per non perdere i dati.', 'err');
-    }
   }
 }
-async function caricaStorage(){
+
+function caricaStorage(){
   try{
-    const res = await window.storage.get(STORAGE_KEY, false);
-    if (res && res.value){
-      const data = JSON.parse(res.value);
-      movimenti = Array.isArray(data.movimenti) ? data.movimenti : [];
-      movimenti = movimenti.map(m => ({
-        id: m.id || (Date.now() + Math.random()),
-        tipo: ['entrata','uscita','risparmio'].includes(m.tipo) ? m.tipo : 'risparmio',
-        importo: Number(m.importo) || 0,
-        data: m.data || oggiStr(),
-        nota: m.nota || ''
-      }));
-      rendimentoAttivo = !!data.rendimentoAttivo;
-      tasso = Number.isFinite(data.tasso) ? data.tasso : 2.5;
-      obiettivo = Number.isFinite(data.obiettivo) && data.obiettivo > 0 ? data.obiettivo : 25000;
-      dataInizio = data.dataInizio || '2026-08-01';
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored){
+      const data = JSON.parse(stored);
+      if (data.utenti && typeof data.utenti === 'object'){
+        stato.utenti = data.utenti;
+        Object.keys(stato.utenti).forEach(key => {
+          const u = stato.utenti[key];
+          if (!u.nome) u.nome = key;
+          if (!u.pin) u.pin = '1234';
+          if (!Array.isArray(u.movimenti)) u.movimenti = [];
+          u.movimenti = u.movimenti.map(m => ({
+            id: m.id || (Date.now() + Math.random()),
+            tipo: ['entrata','uscita','risparmio'].includes(m.tipo) ? m.tipo : 'risparmio',
+            importo: Number(m.importo) || 0,
+            data: m.data || oggiStr(),
+            nota: m.nota || ''
+          }));
+        });
+      }
+      if (data.rendimentoAttivo !== undefined) stato.rendimentoAttivo = !!data.rendimentoAttivo;
+      if (Number.isFinite(data.tasso)) stato.tasso = data.tasso;
+      if (Number.isFinite(data.obiettivo) && data.obiettivo > 0) stato.obiettivo = data.obiettivo;
+      if (data.dataInizio) stato.dataInizio = data.dataInizio;
       return true;
     }
   }catch(e){
-    // chiave inesistente al primo avvio: normale, nessun dato salvato ancora
+    console.warn('Errore caricamento storage:', e);
   }
   return false;
 }
+
+// ============================================================
+// GESTIONE UTENTI
+// ============================================================
+function getUtentiList(){
+  return Object.keys(stato.utenti).map(key => ({ id: key, ...stato.utenti[key] }));
+}
+
+function getUtente(id){
+  return stato.utenti[id] || null;
+}
+
+function getMovimentiUtente(id){
+  const u = getUtente(id);
+  return u ? u.movimenti : [];
+}
+
+function setMovimentiUtente(id, movimenti){
+  if (stato.utenti[id]){
+    stato.utenti[id].movimenti = movimenti;
+    salvaStorage();
+  }
+}
+
+function aggiungiUtente(nome, pin){
+  const id = 'user_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+  stato.utenti[id] = { 
+    nome: nome.trim(), 
+    pin: pin || '1234', 
+    movimenti: [] 
+  };
+  salvaStorage();
+  return id;
+}
+
+function eliminaUtente(id){
+  const utenti = getUtentiList();
+  if (utenti.length <= 1){
+    toast('Deve rimanere almeno un utente.', 'err');
+    return false;
+  }
+  if (id === stato.utenteCorrente){
+    toast('Non puoi eliminare l\'utente corrente. Cambia utente prima.', 'err');
+    return false;
+  }
+  delete stato.utenti[id];
+  salvaStorage();
+  return true;
+}
+
+function cambiaPinUtente(id, nuovoPin){
+  if (stato.utenti[id]){
+    stato.utenti[id].pin = nuovoPin;
+    salvaStorage();
+    return true;
+  }
+  return false;
+}
+
+// ============================================================
+// LOCK SCREEN
+// ============================================================
+const lockScreen = document.getElementById('lockScreen');
+const appEl = document.getElementById('app');
+
+function showLockScreen(){
+  lockScreen.classList.remove('hidden');
+  appEl.style.display = 'none';
+  pinCorrente = '';
+  tentativiFalliti = 0;
+  aggiornaPinDots();
+  document.getElementById('lockError').textContent = '';
+  aggiornaUserSelector();
+}
+
+function hideLockScreen(){
+  lockScreen.classList.add('hidden');
+  appEl.style.display = 'block';
+}
+
+function aggiornaPinDots(){
+  const dots = document.querySelectorAll('.pin-dot');
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('filled', i < pinCorrente.length);
+  });
+}
+
+function aggiornaUserSelector(){
+  const container = document.getElementById('userSelector');
+  const utenti = getUtentiList();
+  let html = '';
+  utenti.forEach(u => {
+    const active = u.id === stato.utenteCorrente ? 'active' : '';
+    const initial = getInitials(u.nome);
+    html += `<button class="user-btn ${active}" data-id="${u.id}">
+      ${initial} ${escapeHtml(u.nome)}
+      <span class="badge">${u.movimenti.length} voci</span>
+    </button>`;
+  });
+  container.innerHTML = html;
+  container.querySelectorAll('.user-btn').forEach(btn => {
+    btn.addEventListener('click', function(){
+      const id = this.dataset.id;
+      selezionaUtenteLock(id);
+    });
+  });
+}
+
+function selezionaUtenteLock(id){
+  stato.utenteCorrente = id;
+  pinCorrente = '';
+  tentativiFalliti = 0;
+  aggiornaPinDots();
+  document.getElementById('lockError').textContent = '';
+  aggiornaUserSelector();
+  const u = getUtente(id);
+  if (u && !u.pin){
+    u.pin = '1234';
+    salvaStorage();
+  }
+}
+
+function verificaPin(){
+  const u = getUtente(stato.utenteCorrente);
+  if (!u){
+    document.getElementById('lockError').textContent = 'Utente non trovato.';
+    return;
+  }
+  if (pinCorrente === u.pin){
+    tentativiFalliti = 0;
+    hideLockScreen();
+    aggiornaTutto();
+    toast('Benvenuto, ' + u.nome + '!');
+    return;
+  }
+  tentativiFalliti++;
+  pinCorrente = '';
+  aggiornaPinDots();
+  const errorEl = document.getElementById('lockError');
+  if (tentativiFalliti >= 3){
+    errorEl.textContent = '⚠️ Troppi tentativi falliti. Riprova tra qualche secondo.';
+    setTimeout(() => {
+      tentativiFalliti = 0;
+      errorEl.textContent = '';
+    }, 3000);
+  } else {
+    errorEl.textContent = '❌ PIN errato. Tentativo ' + tentativiFalliti + ' di 3.';
+  }
+}
+
+// ============================================================
+// PIN PAD
+// ============================================================
+document.querySelectorAll('.pin-key').forEach(key => {
+  key.addEventListener('click', function(){
+    const value = this.dataset.value;
+    if (value === 'del'){
+      pinCorrente = pinCorrente.slice(0, -1);
+    } else if (pinCorrente.length < 4){
+      pinCorrente += value;
+    }
+    aggiornaPinDots();
+    if (pinCorrente.length === 4){
+      verificaPin();
+    }
+  });
+});
 
 // ============================================================
 // DOM REFS
@@ -711,9 +1123,13 @@ const aggiungiBtn = $('aggiungiBtn'), aggiungiBtnHeader = $('aggiungiBtnHeader')
 const rendimentoToggle = $('rendimentoToggle'), tassoInput = $('tassoInput'), rendimentoInfo = $('rendimentoInfo');
 const obiettivoInput = $('obiettivoInput'), dataInizioInput = $('dataInizioInput');
 const salvaBtn = $('salvaBtn'), caricaBtn = $('caricaBtn'), fileInput = $('fileInput'), resetBtn = $('resetBtn');
+const userBadge = $('userBadge'), userAvatar = $('userAvatar'), userNameDisplay = $('userNameDisplay');
+const userList = $('userList'), nuovoUtenteInput = $('nuovoUtenteInput'), aggiungiUtenteBtn = $('aggiungiUtenteBtn');
+const cambiaPinBtn = $('cambiaPinBtn');
+const titoloPrincipale = $('titoloPrincipale');
 
 // ============================================================
-// TAB MANAGEMENT (collegato subito, cosi' funziona anche se i grafici falliscono)
+// TAB MANAGEMENT
 // ============================================================
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', function(){
@@ -721,25 +1137,32 @@ document.querySelectorAll('.tab').forEach(btn => {
     this.classList.add('active');
     const id = this.dataset.tab;
     document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-    $('tab-' + id).classList.add('active');
+    const target = $('tab-' + id);
+    if (target) target.classList.add('active');
     if (id === 'analisi') setTimeout(aggiornaGrafici, 150);
+    if (id === 'utenti') renderUserList();
   });
 });
 
 // ============================================================
-// CHARTS (resiliente: se Chart.js non si carica, il resto dell'app funziona comunque)
+// CHARTS
 // ============================================================
 let chartAccumulo = null, chartDistribuzione = null, chartMensile = null;
 function initCharts(){
   if (typeof Chart === 'undefined'){
-    toast('Impossibile caricare la libreria dei grafici. Il resto dell\'app funziona normalmente.', 'err');
+    toast('Impossibile caricare la libreria dei grafici.', 'err');
     return;
   }
   try{
+    const ctx1 = document.getElementById('accumuloChart')?.getContext('2d');
+    const ctx2 = document.getElementById('distribuzioneChart')?.getContext('2d');
+    const ctx3 = document.getElementById('mensileChart')?.getContext('2d');
+    if (!ctx1 || !ctx2 || !ctx3) return;
+
     Chart.defaults.color = '#8fa4b8';
     Chart.defaults.font.family = "'Inter', sans-serif";
 
-    chartAccumulo = new Chart($('accumuloChart').getContext('2d'), {
+    chartAccumulo = new Chart(ctx1, {
       type:'line',
       data:{ labels:[], datasets:[{ label:'Risparmio accumulato', data:[], borderColor:'#d8ad57', backgroundColor:'rgba(216,173,87,0.08)', fill:true, tension:0.4, pointRadius:0, pointHoverRadius:4, pointBackgroundColor:'#eec877', borderWidth:2 }]},
       options:{ responsive:true, maintainAspectRatio:false,
@@ -747,13 +1170,13 @@ function initCharts(){
         scales:{ x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{maxTicksLimit:10} }, y:{ beginAtZero:true, grid:{color:'rgba(255,255,255,0.05)'}, ticks:{ callback:(v)=>euro(v) } } } }
     });
 
-    chartDistribuzione = new Chart($('distribuzioneChart').getContext('2d'), {
+    chartDistribuzione = new Chart(ctx2, {
       type:'doughnut',
       data:{ labels:['Entrate','Uscite','Risparmio'], datasets:[{ data:[0,0,0], backgroundColor:['#63b592','#e0808a','#d8ad57'], borderWidth:2, borderColor:'#152a3b' }]},
       options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ padding:16, usePointStyle:true, color:'#a9bccb' } } }, cutout:'65%' }
     });
 
-    chartMensile = new Chart($('mensileChart').getContext('2d'), {
+    chartMensile = new Chart(ctx3, {
       type:'bar',
       data:{ labels:[], datasets:[
         { label:'Entrate', data:[], backgroundColor:'rgba(99,181,146,0.75)', borderRadius:4 },
@@ -770,29 +1193,35 @@ function initCharts(){
 }
 
 // ============================================================
-// CALCOLI
+// CALCOLI (basati sull'utente corrente)
 // ============================================================
-function totalePerTipo(tipo){
-  return movimenti.filter(m => m.tipo === tipo).reduce((s,m) => s + m.importo, 0);
+function getMovimentiCorrenti(){
+  return getMovimentiUtente(stato.utenteCorrente);
 }
+
+function totalePerTipo(tipo){
+  return getMovimentiCorrenti().filter(m => m.tipo === tipo).reduce((s,m) => s + m.importo, 0);
+}
+
 function totalePerTipoPeriodo(tipo, anno, mese){
-  return movimenti.filter(m => {
+  return getMovimentiCorrenti().filter(m => {
     const d = new Date(m.data + 'T00:00:00');
     return m.tipo === tipo && d.getFullYear() === anno && (mese === undefined || d.getMonth() === mese);
   }).reduce((s,m) => s + m.importo, 0);
 }
+
 function totaleRisparmioBase(){ return totalePerTipo('risparmio'); }
 
 function getRisparmiOrdinati(){
-  return movimenti.filter(m => m.tipo === 'risparmio').sort((a,b) => new Date(a.data) - new Date(b.data));
+  return getMovimentiCorrenti().filter(m => m.tipo === 'risparmio').sort((a,b) => new Date(a.data + 'T00:00:00') - new Date(b.data + 'T00:00:00'));
 }
 
 function calcolaInteressi(){
-  if (!rendimentoAttivo || tasso <= 0) return 0;
+  if (!stato.rendimentoAttivo || stato.tasso <= 0) return 0;
   const risparmi = getRisparmiOrdinati();
   if (risparmi.length === 0) return 0;
 
-  const tassoMensile = tasso / 100 / 12;
+  const tassoMensile = stato.tasso / 100 / 12;
   const movMap = {};
   risparmi.forEach(m => {
     const key = monthKey(m.data);
@@ -824,7 +1253,7 @@ function generaSerieStorica(){
   const risparmi = getRisparmiOrdinati();
   if (risparmi.length === 0) return [];
 
-  const tassoMensile = tasso / 100 / 12;
+  const tassoMensile = stato.tasso / 100 / 12;
   const movMap = {};
   risparmi.forEach(m => {
     const key = monthKey(m.data);
@@ -841,7 +1270,7 @@ function generaSerieStorica(){
   while (current <= end){
     const key = current.getFullYear() + '-' + String(current.getMonth()+1).padStart(2,'0');
     if (movMap[key]) capitale += movMap[key];
-    if (rendimentoAttivo && tasso > 0 && !primoMese){
+    if (stato.rendimentoAttivo && stato.tasso > 0 && !primoMese){
       capitale += capitale * tassoMensile;
     }
     primoMese = false;
@@ -884,21 +1313,23 @@ function calcolaTrend(tipo){
 // RENDER
 // ============================================================
 function renderMilestoneRuler(totale){
-  const marks = [1,2,3,4,5].map(i => Math.round(obiettivo * i / 5));
+  const marks = [1,2,3,4,5].map(i => Math.round(stato.obiettivo * i / 5));
   const host = $('rulerMarks');
-  const pct = Math.min(100, (totale / obiettivo) * 100);
-  $('rulerFill').style.width = 'calc(' + pct + '% - ' + (pct >= 100 ? 40 : 0) + 'px)';
-  $('rulerFill').style.width = Math.min(100, pct) + '%';
+  const pct = Math.min(100, (totale / stato.obiettivo) * 100);
+  const fill = $('rulerFill');
+  if (fill) fill.style.width = Math.min(100, pct) + '%';
 
-  host.innerHTML = marks.map(t => {
-    const reached = totale >= t;
-    const status = reached ? '✓ raggiunto' : ('manca ' + euro(t - totale));
-    return `<div class="r-mark ${reached ? 'reached' : ''}">
-      <div class="r-amt">${euro(t)}</div>
-      <div class="r-dot"></div>
-      <div class="r-status">${status}</div>
-    </div>`;
-  }).join('');
+  if (host) {
+    host.innerHTML = marks.map(t => {
+      const reached = totale >= t;
+      const status = reached ? '✓ raggiunto' : 'manca ' + euro(t - totale);
+      return `<div class="r-mark ${reached ? 'reached' : ''}">
+        <div class="r-amt">${euro(t)}</div>
+        <div class="r-dot"></div>
+        <div class="r-status">${status}</div>
+      </div>`;
+    }).join('');
+  }
 }
 
 function aggiornaStats(){
@@ -909,53 +1340,69 @@ function aggiornaStats(){
   const interessi = calcolaInteressi();
   const totaleConInteressi = risparmioBase + interessi;
 
-  $('totaleEntrate').textContent = euro(entrate);
-  $('totaleUscite').textContent = euro(uscite);
-  $('totaleRisparmio').textContent = euro(risparmioBase);
-  $('interessiGenerati').textContent = euro(interessi);
-  $('risparmioTotaleLabel').textContent = euro(totaleConInteressi);
+  const el = (id) => document.getElementById(id);
+  if (el('totaleEntrate')) el('totaleEntrate').textContent = euro(entrate);
+  if (el('totaleUscite')) el('totaleUscite').textContent = euro(uscite);
+  if (el('totaleRisparmio')) el('totaleRisparmio').textContent = euro(risparmioBase);
+  if (el('interessiGenerati')) el('interessiGenerati').textContent = euro(interessi);
+  if (el('risparmioTotaleLabel')) el('risparmioTotaleLabel').textContent = euro(totaleConInteressi);
 
-  $('entrateMese').textContent = euro(totalePerTipoPeriodo('entrata', annoC, meseC));
-  $('usciteMese').textContent = euro(totalePerTipoPeriodo('uscita', annoC, meseC));
-  $('risparmioMese').textContent = euro(totalePerTipoPeriodo('risparmio', annoC, meseC));
+  if (el('entrateMese')) el('entrateMese').textContent = euro(totalePerTipoPeriodo('entrata', annoC, meseC));
+  if (el('usciteMese')) el('usciteMese').textContent = euro(totalePerTipoPeriodo('uscita', annoC, meseC));
+  if (el('risparmioMese')) el('risparmioMese').textContent = euro(totalePerTipoPeriodo('risparmio', annoC, meseC));
 
-  $('annoEntrate').textContent = euro(totalePerTipoPeriodo('entrata', annoC));
-  $('annoUscite').textContent = euro(totalePerTipoPeriodo('uscita', annoC));
-  $('annoRisparmio').textContent = euro(totalePerTipoPeriodo('risparmio', annoC));
+  if (el('annoEntrate')) el('annoEntrate').textContent = euro(totalePerTipoPeriodo('entrata', annoC));
+  if (el('annoUscite')) el('annoUscite').textContent = euro(totalePerTipoPeriodo('uscita', annoC));
+  if (el('annoRisparmio')) el('annoRisparmio').textContent = euro(totalePerTipoPeriodo('risparmio', annoC));
 
-  const pct = Math.min(100, (totaleConInteressi / obiettivo) * 100);
-  $('progressoPct').textContent = pct.toFixed(1) + '%';
-  $('progressoAmt').textContent = euro(totaleConInteressi) + ' / ' + euro(obiettivo);
-  const circumference = 2 * Math.PI * 82;
-  $('sealArc').setAttribute('stroke-dasharray', circumference.toFixed(1));
-  $('sealArc').setAttribute('stroke-dashoffset', (circumference * (1 - pct/100)).toFixed(1));
+  if (el('progressoPct')) {
+    const pct = stato.obiettivo > 0 ? Math.min(100, (totaleConInteressi / stato.obiettivo) * 100) : 0;
+    el('progressoPct').textContent = pct.toFixed(1) + '%';
+    el('progressoAmt').textContent = euro(totaleConInteressi) + ' / ' + euro(stato.obiettivo);
+    const circumference = 2 * Math.PI * 82;
+    const arc = document.getElementById('sealArc');
+    if (arc) {
+      arc.setAttribute('stroke-dasharray', circumference.toFixed(1));
+      arc.setAttribute('stroke-dashoffset', (circumference * (1 - pct/100)).toFixed(1));
+    }
+  }
 
-  $('conteggioMovimenti').textContent = movimenti.length;
-  $('conteggioMovimentiLista').textContent = movimenti.length + (movimenti.length === 1 ? ' voce' : ' voci');
-  $('obiettivoTitolo').textContent = new Intl.NumberFormat('it-IT').format(obiettivo);
-  $('dataInizioLabel').textContent = formatDateLong(dataInizio);
+  const movCorrenti = getMovimentiCorrenti();
+  if (el('conteggioMovimenti')) el('conteggioMovimenti').textContent = movCorrenti.length;
+  if (el('conteggioMovimentiLista')) el('conteggioMovimentiLista').textContent = movCorrenti.length + (movCorrenti.length === 1 ? ' voce' : ' voci');
+  if (el('dataInizioLabel')) el('dataInizioLabel').textContent = formatDateLong(stato.dataInizio);
 
-  if (rendimentoAttivo){
-    $('rendimentoStatus').textContent = '✅ attivo (' + tasso + '%)';
-    $('rendimentoStatus').style.color = '#63b592';
-  } else {
-    $('rendimentoStatus').textContent = '⚪ off';
-    $('rendimentoStatus').style.color = '#6f889c';
+  if (el('rendimentoStatus')){
+    if (stato.rendimentoAttivo){
+      el('rendimentoStatus').textContent = '✅ attivo (' + stato.tasso + '%)';
+      el('rendimentoStatus').style.color = '#63b592';
+    } else {
+      el('rendimentoStatus').textContent = '⚪ off';
+      el('rendimentoStatus').style.color = '#6f889c';
+    }
   }
 
   const tE = calcolaTrend('entrata'), tU = calcolaTrend('uscita'), tR = calcolaTrend('risparmio');
-  $('entrateTrend').textContent = tE.text; $('entrateTrend').className = 'chg ' + tE.cls;
-  $('usciteTrend').textContent = tU.text; $('usciteTrend').className = 'chg ' + tU.cls;
-  $('risparmioTrend').textContent = tR.text; $('risparmioTrend').className = 'chg ' + tR.cls;
+  if (el('entrateTrend')) { el('entrateTrend').textContent = tE.text; el('entrateTrend').className = 'chg ' + tE.cls; }
+  if (el('usciteTrend')) { el('usciteTrend').textContent = tU.text; el('usciteTrend').className = 'chg ' + tU.cls; }
+  if (el('risparmioTrend')) { el('risparmioTrend').textContent = tR.text; el('risparmioTrend').className = 'chg ' + tR.cls; }
 
   renderMilestoneRuler(totaleConInteressi);
 
-  $('totEntrate').textContent = euro(entrate);
-  $('totUscite').textContent = euro(uscite);
-  $('totRisparmio').textContent = euro(risparmioBase);
-  $('numEntrate').textContent = movimenti.filter(m=>m.tipo==='entrata').length;
-  $('numUscite').textContent = movimenti.filter(m=>m.tipo==='uscita').length;
-  $('numRisparmi').textContent = movimenti.filter(m=>m.tipo==='risparmio').length;
+  if (el('totEntrate')) el('totEntrate').textContent = euro(entrate);
+  if (el('totUscite')) el('totUscite').textContent = euro(uscite);
+  if (el('totRisparmio')) el('totRisparmio').textContent = euro(risparmioBase);
+  if (el('numEntrate')) el('numEntrate').textContent = movCorrenti.filter(m=>m.tipo==='entrata').length;
+  if (el('numUscite')) el('numUscite').textContent = movCorrenti.filter(m=>m.tipo==='uscita').length;
+  if (el('numRisparmi')) el('numRisparmi').textContent = movCorrenti.filter(m=>m.tipo==='risparmio').length;
+
+  // Aggiorna badge utente
+  const u = getUtente(stato.utenteCorrente);
+  if (u && userAvatar && userNameDisplay){
+    userAvatar.textContent = getInitials(u.nome);
+    userNameDisplay.textContent = u.nome;
+    if (titoloPrincipale) titoloPrincipale.textContent = u.nome;
+  }
 }
 
 function tipoLabel(tipo){
@@ -974,18 +1421,20 @@ function renderRigaMovimento(m, withDelete){
 }
 
 function renderMovimenti(){
-  const corpo = $('movimentiCorpo');
-  if (movimenti.length === 0){
+  const corpo = document.getElementById('movimentiCorpo');
+  if (!corpo) return;
+  const mov = getMovimentiCorrenti();
+  if (mov.length === 0){
     corpo.innerHTML = `<tr><td colspan="5" class="empty-msg">Nessuna voce registrata. Aggiungine una dal modulo qui sopra.</td></tr>`;
     return;
   }
-  const ordinati = [...movimenti].sort((a,b) => new Date(b.data) - new Date(a.data));
+  const ordinati = [...mov].sort((a,b) => new Date(b.data) - new Date(a.data));
   let html = ordinati.map(m => renderRigaMovimento(m, true)).join('');
 
   const totE = totalePerTipo('entrata'), totU = totalePerTipo('uscita'), totR = totaleRisparmioBase();
   html += `<tr class="row-tot"><td colspan="2">Totali</td><td class="mono" style="color:var(--forest);">${euro(totE)}</td><td colspan="2" class="mono" style="color:var(--rose);">${euro(totU)}  ·  <span style="color:var(--brass-bright);">${euro(totR)} risp.</span></td></tr>`;
 
-  if (rendimentoAttivo){
+  if (stato.rendimentoAttivo){
     const interessi = calcolaInteressi();
     html += `<tr class="row-tot"><td colspan="4">Interessi maturati + totale accumulato</td><td class="mono" style="color:var(--violet);">+${euro(interessi)} → ${euro(totR + interessi)}</td></tr>`;
   }
@@ -997,13 +1446,48 @@ function renderMovimenti(){
 }
 
 function renderUltimiMovimenti(){
-  const host = $('ultimiMovimenti');
-  if (movimenti.length === 0){
+  const host = document.getElementById('ultimiMovimenti');
+  if (!host) return;
+  const mov = getMovimentiCorrenti();
+  if (mov.length === 0){
     host.innerHTML = `<tr><td colspan="4" class="empty-msg">Nessuna voce registrata.</td></tr>`;
     return;
   }
-  const ultimi = [...movimenti].sort((a,b) => new Date(b.data) - new Date(a.data)).slice(0,5);
+  const ultimi = [...mov].sort((a,b) => new Date(b.data) - new Date(a.data)).slice(0,5);
   host.innerHTML = ultimi.map(m => renderRigaMovimento(m, false)).join('');
+}
+
+function renderUserList(){
+  if (!userList) return;
+  const utenti = getUtentiList();
+  const corrente = stato.utenteCorrente;
+  let html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+  utenti.forEach(u => {
+    const isCurrent = u.id === corrente;
+    const initial = getInitials(u.nome);
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-1);border-radius:8px;border:1px solid ${isCurrent ? 'var(--brass-dim)' : 'var(--rule-soft)'};">
+      <div>
+        <span style="font-weight:600;color:${isCurrent ? 'var(--brass-bright)' : 'var(--paper)'};">${initial} ${escapeHtml(u.nome)}</span>
+        <span style="font-size:12px;color:var(--text-faint);margin-left:10px;">${u.movimenti.length} voci</span>
+        ${isCurrent ? ' <span style="font-size:10px;color:var(--brass);background:rgba(216,173,87,0.15);padding:2px 8px;border-radius:10px;">attivo</span>' : ''}
+      </div>
+      ${!isCurrent ? `<button class="btn btn-danger btn-sm" style="padding:4px 10px;font-size:11px;" data-id="${u.id}" data-action="delete">✕</button>` : ''}
+    </div>`;
+  });
+  html += '</div>';
+  userList.innerHTML = html;
+  
+  userList.querySelectorAll('[data-action="delete"]').forEach(btn => {
+    btn.addEventListener('click', async function(){
+      const id = this.dataset.id;
+      const ok = await confirmDialog('Eliminare utente?', 'Tutti i dati di questo utente verranno persi.');
+      if (ok && eliminaUtente(id)){
+        renderUserList();
+        aggiornaUserSelector();
+        toast('Utente eliminato.');
+      }
+    });
+  });
 }
 
 function aggiornaGrafici(){
@@ -1039,11 +1523,12 @@ function aggiornaGrafici(){
 }
 
 async function aggiornaTutto(){
+  if (!stato.utenteCorrente) return;
   aggiornaStats();
   renderMovimenti();
   renderUltimiMovimenti();
   aggiornaGrafici();
-  await salvaStorage();
+  salvaStorage();
 }
 
 // ============================================================
@@ -1052,7 +1537,8 @@ async function aggiornaTutto(){
 async function eliminaMovimento(id){
   const ok = await confirmDialog('Eliminare la voce?', 'L\'operazione non può essere annullata.');
   if (!ok) return;
-  movimenti = movimenti.filter(m => m.id !== id);
+  const mov = getMovimentiCorrenti().filter(m => m.id !== id);
+  setMovimentiUtente(stato.utenteCorrente, mov);
   await aggiornaTutto();
   toast('Voce eliminata.');
 }
@@ -1066,15 +1552,17 @@ async function aggiungiMovimento(tipo, importo, data, nota){
     toast('Seleziona una data valida.', 'err');
     return false;
   }
-  movimenti.push({ id: Date.now() + Math.random(), tipo, importo: Math.round(importo * 100) / 100, data, nota: (nota || '').trim().slice(0,120) });
+  const mov = getMovimentiCorrenti();
+  mov.push({ id: Date.now() + Math.random(), tipo, importo: Math.round(importo * 100) / 100, data, nota: (nota || '').trim().slice(0,120) });
+  setMovimentiUtente(stato.utenteCorrente, mov);
   await aggiornaTutto();
   toast('Voce aggiunta al libretto.');
   return true;
 }
 
 function aggiornaRendimentoInfo(){
-  if (rendimentoAttivo){
-    rendimentoInfo.textContent = `(attivo: ${tasso}% annuo)`;
+  if (stato.rendimentoAttivo){
+    rendimentoInfo.textContent = `(attivo: ${stato.tasso}% annuo)`;
     rendimentoInfo.style.color = '#63b592';
     rendimentoToggle.classList.add('active');
   } else {
@@ -1085,22 +1573,24 @@ function aggiornaRendimentoInfo(){
 }
 
 async function resetCompleto(){
-  const ok1 = await confirmDialog('Reset completo', 'Vuoi eliminare TUTTE le voci registrate? Questa azione è irreversibile.');
+  const ok1 = await confirmDialog('Reset completo', 'Vuoi eliminare TUTTE le voci registrate per questo utente? Questa azione è irreversibile.');
   if (!ok1) return;
-  movimenti = [];
-  rendimentoAttivo = false;
-  tasso = 2.5;
-  obiettivo = 25000;
-  tassoInput.value = 2.5;
-  obiettivoInput.value = 25000;
-  aggiornaRendimentoInfo();
+  setMovimentiUtente(stato.utenteCorrente, []);
   await aggiornaTutto();
-  toast('Reset completato.');
+  toast('Reset completato per ' + getUtente(stato.utenteCorrente)?.nome + '.');
 }
 
 function scaricaBackup(){
   try{
-    const data = { versione:'4.0', dataExport:new Date().toISOString(), movimenti, rendimentoAttivo, tasso, obiettivo, dataInizio };
+    const data = { 
+      versione:'5.0', 
+      dataExport:new Date().toISOString(), 
+      utenti: stato.utenti,
+      rendimentoAttivo: stato.rendimentoAttivo, 
+      tasso: stato.tasso, 
+      obiettivo: stato.obiettivo, 
+      dataInizio: stato.dataInizio 
+    };
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1109,7 +1599,7 @@ function scaricaBackup(){
     URL.revokeObjectURL(url);
     toast('Backup scaricato.');
   }catch(e){
-    toast('Impossibile scaricare il backup in questo ambiente.', 'err');
+    toast('Impossibile scaricare il backup.', 'err');
   }
 }
 
@@ -1117,75 +1607,139 @@ async function caricaBackup(file){
   try{
     const text = await file.text();
     const data = JSON.parse(text);
-    if (!data || !Array.isArray(data.movimenti)) throw new Error('formato non valido');
-    const ok = await confirmDialog('Caricare backup', 'Questo backup sostituirà tutte le voci attuali. Continuare?');
+    if (!data || !data.utenti) throw new Error('formato non valido');
+    const ok = await confirmDialog('Caricare backup', 'Questo backup sostituirà TUTTI i dati. Continuare?');
     if (!ok) return;
-    movimenti = data.movimenti.map(m => ({
-      id: m.id || (Date.now() + Math.random()),
-      tipo: ['entrata','uscita','risparmio'].includes(m.tipo) ? m.tipo : 'risparmio',
-      importo: Number(m.importo) || 0,
-      data: m.data || oggiStr(),
-      nota: m.nota || ''
-    }));
-    if (data.rendimentoAttivo !== undefined) rendimentoAttivo = !!data.rendimentoAttivo;
-    if (Number.isFinite(data.tasso)) { tasso = data.tasso; tassoInput.value = tasso; }
-    if (Number.isFinite(data.obiettivo) && data.obiettivo > 0) { obiettivo = data.obiettivo; obiettivoInput.value = obiettivo; }
-    if (data.dataInizio) { dataInizio = data.dataInizio; dataInizioInput.value = dataInizio; }
+    stato.utenti = data.utenti;
+    if (data.rendimentoAttivo !== undefined) stato.rendimentoAttivo = !!data.rendimentoAttivo;
+    if (Number.isFinite(data.tasso)) { stato.tasso = data.tasso; tassoInput.value = stato.tasso; }
+    if (Number.isFinite(data.obiettivo) && data.obiettivo > 0) { stato.obiettivo = data.obiettivo; obiettivoInput.value = stato.obiettivo; }
+    if (data.dataInizio) { stato.dataInizio = data.dataInizio; dataInizioInput.value = stato.dataInizio; }
     aggiornaRendimentoInfo();
-    await aggiornaTutto();
-    toast(movimenti.length + ' voci importate.');
+    salvaStorage();
+    showLockScreen();
+    toast('Backup caricato. Riapri il libretto con il tuo PIN.');
   }catch(e){
     toast('File non valido o corrotto.', 'err');
   }
 }
 
+async function cambiaUtente(){
+  const ok = await confirmDialog('Cambia utente', 'Vuoi uscire e cambiare utente?');
+  if (!ok) return;
+  showLockScreen();
+}
+
 // ============================================================
 // EVENTI
 // ============================================================
-aggiungiBtn.addEventListener('click', async function(){
-  const tipo = tipoSelect.value;
-  const importo = parseFloat(importoInput.value);
-  const data = dataInput.value || oggiStr();
-  const nota = notaInput.value;
-  if (await aggiungiMovimento(tipo, importo, data, nota)){
-    importoInput.value = ''; notaInput.value = ''; importoInput.focus();
+if (aggiungiBtn) {
+  aggiungiBtn.addEventListener('click', async function(){
+    const tipo = tipoSelect.value;
+    const importo = parseFloat(importoInput.value);
+    const data = dataInput.value || oggiStr();
+    const nota = notaInput.value;
+    if (await aggiungiMovimento(tipo, importo, data, nota)){
+      importoInput.value = ''; notaInput.value = ''; 
+      if (importoInput) importoInput.focus();
+    }
+  });
+}
+
+if (aggiungiBtnHeader) {
+  aggiungiBtnHeader.addEventListener('click', function(){
+    const tab = document.querySelector('[data-tab="movimenti"]');
+    if (tab) tab.click();
+    setTimeout(() => { if (importoInput) importoInput.focus(); }, 100);
+  });
+}
+
+[importoInput, notaInput].forEach(el => {
+  if (el) {
+    el.addEventListener('keypress', e => { if (e.key === 'Enter'){ e.preventDefault(); if (aggiungiBtn) aggiungiBtn.click(); } });
   }
 });
-aggiungiBtnHeader.addEventListener('click', function(){
-  document.querySelector('[data-tab="movimenti"]').click();
-  setTimeout(() => importoInput.focus(), 100);
-});
-[importoInput, notaInput].forEach(el => el.addEventListener('keypress', e => { if (e.key === 'Enter'){ e.preventDefault(); aggiungiBtn.click(); } }));
 
-rendimentoToggle.addEventListener('click', async function(){
-  rendimentoAttivo = !rendimentoAttivo;
-  aggiornaRendimentoInfo();
-  await aggiornaTutto();
-});
-tassoInput.addEventListener('input', async function(){
-  const v = parseFloat(this.value);
-  tasso = Number.isFinite(v) ? Math.max(0, Math.min(20, v)) : 0;
-  if (rendimentoAttivo) await aggiornaTutto();
-  aggiornaRendimentoInfo();
-});
-obiettivoInput.addEventListener('change', async function(){
-  const v = parseFloat(this.value);
-  obiettivo = Number.isFinite(v) && v > 0 ? v : obiettivo;
-  this.value = obiettivo;
-  await aggiornaTutto();
-});
-dataInizioInput.addEventListener('change', async function(){
-  dataInizio = this.value || dataInizio;
-  await aggiornaTutto();
-});
+if (rendimentoToggle) {
+  rendimentoToggle.addEventListener('click', async function(){
+    stato.rendimentoAttivo = !stato.rendimentoAttivo;
+    aggiornaRendimentoInfo();
+    await aggiornaTutto();
+  });
+}
 
-salvaBtn.addEventListener('click', scaricaBackup);
-caricaBtn.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', function(){
-  if (this.files && this.files[0]) caricaBackup(this.files[0]);
-  this.value = '';
-});
-resetBtn.addEventListener('click', resetCompleto);
+if (tassoInput) {
+  tassoInput.addEventListener('input', async function(){
+    const v = parseFloat(this.value);
+    stato.tasso = Number.isFinite(v) ? Math.max(0, Math.min(20, v)) : 0;
+    if (stato.rendimentoAttivo) await aggiornaTutto();
+    aggiornaRendimentoInfo();
+  });
+}
+
+if (obiettivoInput) {
+  obiettivoInput.addEventListener('change', async function(){
+    const v = parseFloat(this.value);
+    stato.obiettivo = Number.isFinite(v) && v > 0 ? v : stato.obiettivo;
+    this.value = stato.obiettivo;
+    await aggiornaTutto();
+  });
+}
+
+if (dataInizioInput) {
+  dataInizioInput.addEventListener('change', async function(){
+    stato.dataInizio = this.value || stato.dataInizio;
+    await aggiornaTutto();
+  });
+}
+
+if (userBadge) {
+  userBadge.addEventListener('click', cambiaUtente);
+}
+
+if (salvaBtn) salvaBtn.addEventListener('click', scaricaBackup);
+if (caricaBtn) caricaBtn.addEventListener('click', () => { if (fileInput) fileInput.click(); });
+if (fileInput) {
+  fileInput.addEventListener('change', function(){
+    if (this.files && this.files[0]) caricaBackup(this.files[0]);
+    this.value = '';
+  });
+}
+if (resetBtn) resetBtn.addEventListener('click', resetCompleto);
+
+if (aggiungiUtenteBtn) {
+  aggiungiUtenteBtn.addEventListener('click', async function(){
+    const nome = nuovoUtenteInput.value.trim();
+    if (!nome){
+      toast('Inserisci un nome valido.', 'err');
+      return;
+    }
+    const pin = await promptPinDialog('PIN per ' + nome, 'Imposta un PIN a 4 cifre per il nuovo utente:');
+    if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)){
+      toast('PIN non valido. Deve essere di 4 cifre.', 'err');
+      return;
+    }
+    aggiungiUtente(nome, pin);
+    nuovoUtenteInput.value = '';
+    renderUserList();
+    aggiornaUserSelector();
+    toast('Utente ' + nome + ' aggiunto!');
+  });
+}
+
+if (cambiaPinBtn) {
+  cambiaPinBtn.addEventListener('click', async function(){
+    const u = getUtente(stato.utenteCorrente);
+    if (!u) return;
+    const nuovoPin = await promptPinDialog('Cambia PIN', 'Inserisci il nuovo PIN a 4 cifre per ' + u.nome + ':');
+    if (nuovoPin && nuovoPin.length === 4 && /^\d{4}$/.test(nuovoPin)){
+      cambiaPinUtente(stato.utenteCorrente, nuovoPin);
+      toast('PIN aggiornato per ' + u.nome);
+    } else if (nuovoPin !== null) {
+      toast('PIN non valido. Deve essere di 4 cifre.', 'err');
+    }
+  });
+}
 
 // ============================================================
 // AVVIO
@@ -1193,22 +1747,40 @@ resetBtn.addEventListener('click', resetCompleto);
 async function init(){
   try{
     initCharts();
-    dataInput.value = oggiStr();
-    const caricato = await caricaStorage();
-    if (!caricato){
-      movimenti = [];
+    
+    // Carica i dati
+    const caricato = caricaStorage();
+    
+    // Se non ci sono utenti, crea l'utente default
+    if (!caricato || Object.keys(stato.utenti).length === 0){
+      const id = aggiungiUtente('Fabio', '1234');
+      stato.utenteCorrente = id;
+    } else {
+      // Prendi il primo utente come corrente
+      const keys = Object.keys(stato.utenti);
+      stato.utenteCorrente = keys[0];
     }
-    tassoInput.value = tasso;
-    obiettivoInput.value = obiettivo;
-    dataInizioInput.value = dataInizio;
+    
+    // Imposta i valori UI
+    if (tassoInput) tassoInput.value = stato.tasso;
+    if (obiettivoInput) obiettivoInput.value = stato.obiettivo;
+    if (dataInizioInput) dataInizioInput.value = stato.dataInizio;
     aggiornaRendimentoInfo();
+    
+    // Mostra la lock screen
+    showLockScreen();
+    aggiornaUserSelector();
+    
+    // Pre-carica i dati dell'utente corrente
     await aggiornaTutto();
     setTimeout(aggiornaGrafici, 300);
+    
   }catch(e){
     console.error('Errore di avvio:', e);
     toast('Si e\' verificato un problema all\'avvio. Prova a ricaricare.', 'err');
   }
 }
+
 init();
 
 })();
